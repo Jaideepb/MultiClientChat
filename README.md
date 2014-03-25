@@ -6,13 +6,13 @@ Implementation:
 ---------------
 
 Details:
-1.User registers
-2.Authenticates/login
-3.Check all logged-in users, along with their status
-4.Send message to particular user
-5.Send message to a group of user's
-6.Broadcast message
-7.Logout
+- User registers
+- Authenticates/login
+- Check all logged-in users, along with their status
+- Send message to particular user
+- Send message to a group of user's
+- Broadcast message
+- Logout
 
 Server: 
 - Stores all the registered users.
