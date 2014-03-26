@@ -9,15 +9,47 @@
 #include<unistd.h>
 #include<errno.h>
 #include<string.h>
+#include<forward_list>
 
 using namespace std;
 int sockfd,highfd;
 fd_set readfds;
+forward_list<int> clientids;
+
+void handleMsg() {
+
+
+}
+
+void handleNewConn() {
+	int newfd;
+	if((newfd = accept(sockfd,NULL,NULL))<0){
+		perror("accept");
+	}
+	else {	
+		clientids.push_front(newfd);
+	}
+}
+
+void ListenConn() {
+	if(FD_ISSET(sockfd,&readfds)) {
+		handleNewConn();
+	}
+	else {
+		for(auto i=clientids.begin();i!=clients.end();i++) {
+			if(FD_ISSET(*i,&readfds)){
+				handleMsg(*i);
+			}
+		}
+	}
+}
 
 void SetSelectFDs() {
-	if(FD_ISSET(sockfd,&readfds)){
-		accept(sockfd,NULL,NULL);	
-	}
+	FD_ZERO(&readfds);
+	FD_SET(sockfd,&readfds);
+	
+	for(auto i=clientsids.begin();i!=clientids.end();i++)
+		FD_SET(*i,&readfds);
 }
 
 int main() {
