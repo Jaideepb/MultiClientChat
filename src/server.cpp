@@ -10,15 +10,31 @@
 #include<errno.h>
 #include<string.h>
 #include<forward_list>
+#include "data.h"
 
 using namespace std;
 int sockfd,highfd;
 fd_set readfds;
 forward_list<int> clientids;
 
-void handleMsg() {
-
-
+// Snd received mesg to all other clients
+void handleMsg(int in_fd) {
+	Message mesg;
+	int result = recv(fd,&mesg,sizeof(mesg),0);
+	if(result==0) {
+		clients.remove(in_fd);
+		close(fd);
+	}
+	else if(result>0) {
+		for(auto i=clients.begin();i!=clients.end();i++) {
+			if(*i!=in_fd) {
+				send(*i,&mesg,sizeof(msg),0);
+			}
+		}
+	}
+	else if(result<0) {
+		perror("recv");
+	}
 }
 
 void handleNewConn() {
